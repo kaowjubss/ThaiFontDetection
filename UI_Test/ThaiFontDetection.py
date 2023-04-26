@@ -6,8 +6,8 @@ import sys
 import numpy as np
 import cv2
 
-class Ui_MainWindow(QMainWindow):
-    def setupUi(self, MainWindow):
+class UI_MainWindow(QMainWindow):
+    def setupUI(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         MainWindow.setFixedSize(800, 600)
@@ -229,7 +229,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = UI_MainWindow()
+    ui.setupUI(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
