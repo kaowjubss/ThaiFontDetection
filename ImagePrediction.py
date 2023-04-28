@@ -14,7 +14,8 @@ class ImagePrediction():
         self.rois_pnd, self.roi_position_pnd,self.rois_img_pnd = self.get_regions_of_interest_pnd(self.image)
         self.predict_imgs = self.preprocessing(self.rois)
         self.predict_imgs_pnd = self.preprocessing_pnd(self.rois_pnd)
-        self.predicted_alphabets,self.alphabets_confidence,self.alphabets_img = self.predict_alphabet(self.rois_img_pnd,self.roi_position,self.predict_imgs_pnd,self.alphabet_model)
+        # self.predicted_alphabets,self.alphabets_confidence,self.alphabets_img = self.predict_alphabet(self.rois_img_pnd,self.roi_position,self.predict_imgs_pnd,self.alphabet_model)
+        self.predicted_alphabets,self.alphabets_confidence,self.alphabets_img = self.predict_alphabet(self.rois_img,self.roi_position,self.predict_imgs,self.alphabet_model)
         self.predicted_fonts,self.fonts_confidence = self.predict_font(self.predict_imgs,self.predicted_alphabets)
         self.font_result,self.result_confidence = self.get_font_result(self.predicted_fonts)
     

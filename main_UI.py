@@ -130,16 +130,20 @@ class UI_MainWindow(QMainWindow):
 
     def update_text(self):
         _translate = QtCore.QCoreApplication.translate
-        self.label_2.setText(_translate("MainWindow", "Prediction : {}:{}".format(chr(int(self.prediction.predicted_alphabets[0][3:],16)),self.prediction.font_result)))
-        self.label_4.setText(_translate("MainWindow", "Confidence : {}:{}".format(self.prediction.alphabets_confidence,self.prediction.result_confidence)))
-    
+        # self.label_2.setText(_translate("MainWindow", "Prediction : {}:{}".format(chr(int(self.prediction.predicted_alphabets[0][3:],16)),self.prediction.font_result)))
+        # self.label_4.setText(_translate("MainWindow", "Confidence : {}:{}".format(self.prediction.alphabets_confidence[0],self.prediction.result_confidence)))
+        self.label_2.setText(_translate("MainWindow", "Prediction : {}".format(self.prediction.font_result)))
+        self.label_4.setText(_translate("MainWindow", "Confidence : {}".format(self.prediction.result_confidence)))
+
+
     def browseImg(self):
         filename = QFileDialog.getOpenFileName(self, 'Open File', '','All Files (*);;PNG Files (*.png);;Jpg Files (*.jpg)')
         if filename[0]:
+            self.index=0
             image = filename[0]
-            # img = cv2.imread(image)
-            # cropImg = self.getImgCorner(img)
-            cropImg = cv2.imread(image) # for testing
+            img = cv2.imread(image)
+            cropImg = self.getImgCorner(img)
+            # cropImg = cv2.imread(image) # for testing
             self.imgs = [cropImg]
             self.showImg(self.imgs[self.index])
             self.prediction.predict(cropImg)
@@ -150,8 +154,14 @@ class UI_MainWindow(QMainWindow):
             
         else:
             return
-    
+
+
     def showImg(self,img):
+        def scale(w,h):
+            if w > h:
+                return 470, int(h * (470/w))
+            else:
+                return int(w * (280/h)), 280
         print(img.shape)
         print(type(img))
         # cv2.imshow("test",img)
@@ -171,6 +181,9 @@ class UI_MainWindow(QMainWindow):
 
         # Open the image
         self.pixmap = QPixmap.fromImage(qImage)
+        self.picture.setGeometry(QtCore.QRect(299, 99, 470, 280))
+        self.picture.setMinimumSize(QtCore.QSize(scale(width,height)[0], scale(width,height)[1]))
+        self.picture.setMaximumSize(QtCore.QSize(scale(width,height)[0], scale(width,height)[1]))
         self.picture.setPixmap(self.pixmap) # Show image
         self.picture.adjustSize()
     
