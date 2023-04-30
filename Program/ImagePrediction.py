@@ -190,7 +190,8 @@ class ImagePrediction():
         predicted_fonts=[]
         predictions=[]
         for c,predict_img in enumerate(predict_imgs):
-            model= load_model(r'D:\University_Work\y2\sem2\AI\code\Project\model\{}.h5'.format(predicted_alphabets[c]))
+            model= load_model(r'D:\University_Work\y2\sem2\AI\code\Project\model\{}.h5'.format(predicted_alphabets[c])) 
+                                #(os.path.dirname(os.path.abspath(sys.argv[0])) + '???')
             prediction=model.predict(predict_img)
             predicted_fonts.append(num2font[np.argmax(prediction, axis=-1)[0]])
             predictions.append(prediction)
