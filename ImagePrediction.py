@@ -1,12 +1,12 @@
 from keras.models import load_model
 import cv2
 import numpy as np
-
+import os
 
 
 class ImagePrediction():
     def __init__(self):
-        self.alphabet_model = load_model('./model/alphabet_model.h5')
+        self.alphabet_model = load_model(os.path.dirname(os.path.abspath('__file__'))+r'\\model\\alphabet_model.h5')
 
     def predict(self,image):
         self.image = image
@@ -130,7 +130,7 @@ class ImagePrediction():
         predicted_fonts=[]
         predictions=[]
         for c,predict_img in enumerate(predict_imgs):
-            model= load_model(r'.\model\{}.h5'.format(predicted_alphabets[c]))
+            model= load_model(os.path.dirname(os.path.abspath('__file__'))+r'\\model\\{}.h5'.format(predicted_alphabets[c]))
             prediction=model.predict(predict_img)
             predicted_fonts.append(num2font[np.argmax(prediction, axis=-1)[0]])
             predictions.append(np.amax(prediction))
