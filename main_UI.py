@@ -25,21 +25,29 @@ class UI_MainWindow(QMainWindow):
 
         self.browseButton = QtWidgets.QPushButton(self.centralwidget)
         self.browseButton.setGeometry(QtCore.QRect(30, 100, 241, 81))
+        font = QtGui.QFont()
+        font.setPointSize(26)
         self.browseButton.setFont(font)
         self.browseButton.setObjectName("browseButton")
 
         self.checkButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkButton.setGeometry(QtCore.QRect(30, 300, 241, 81))
+        font = QtGui.QFont()
+        font.setPointSize(26)
         self.checkButton.setFont(font)
         self.checkButton.setObjectName("checkButton")
 
         self.nextButton = QtWidgets.QPushButton(self.centralwidget)
         self.nextButton.setGeometry(QtCore.QRect(151, 200, 120, 81))
+        font = QtGui.QFont()
+        font.setPointSize(26)
         self.nextButton.setFont(font)
         self.nextButton.setObjectName("nextButton")
 
         self.prevButton = QtWidgets.QPushButton(self.centralwidget)
         self.prevButton.setGeometry(QtCore.QRect(30, 200, 120, 81))
+        font = QtGui.QFont()
+        font.setPointSize(26)
         self.prevButton.setFont(font)
         self.prevButton.setObjectName("prevButton")
 
@@ -52,15 +60,15 @@ class UI_MainWindow(QMainWindow):
         self.picture.setScaledContents(True)
         self.picture.setObjectName("picture")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(30, 380, 641, 71))
+        self.label_2.setGeometry(QtCore.QRect(30, 390, 641, 71))
+        font = QtGui.QFont()
+        font.setPointSize(26)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(30, 440, 641, 71))
-        self.label_3.setFont(font)
-        self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(30, 500, 641, 71))
+        self.label_4.setGeometry(QtCore.QRect(30, 460, 641, 71))
+        font = QtGui.QFont()
+        font.setPointSize(26)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -95,9 +103,8 @@ class UI_MainWindow(QMainWindow):
         self.prevButton.setText(_translate("MainWindow", "Prev"))
         self.nextButton.setStatusTip(_translate("MainWindow", "Next Image"))
         self.nextButton.setText(_translate("MainWindow", "Next"))
-        self.label_2.setText(_translate("MainWindow", "Charactor   : -"))
-        self.label_3.setText(_translate("MainWindow", "Font        : -"))
-        self.label_4.setText(_translate("MainWindow", "Font Result : -"))
+        self.label_2.setText(_translate("MainWindow", "Prediction : TestOne"))
+        self.label_4.setText(_translate("MainWindow", "Confidence : 100%"))
     
     index = 0
     imgs = 0
@@ -109,42 +116,30 @@ class UI_MainWindow(QMainWindow):
         if self.index >= len(self.imgs):
             self.index = 0
         self.showImg(self.imgs[self.index])
-        self.update_text(self.index)
+        self.update_text()
     
     def prevImg(self):
         if not self.imgs:
             return
+        _translate = QtCore.QCoreApplication.translate
         self.index -= 1
         if self.index < 0:
             self.index = len(self.imgs) - 1
         self.showImg(self.imgs[self.index])
-        self.update_text(self.index)
+        self.update_text()
 
-    def update_text(self,i):
+    def update_text(self):
         _translate = QtCore.QCoreApplication.translate
-        if i >=2:
-            self.label_2.setText(_translate("MainWindow", "Charactor   : {}:{}".format(chr(int(self.prediction.predicted_alphabets[i-2][3:],16)),self.prediction.alphabets_confidence[i-2])))
-            self.label_3.setText(_translate("MainWindow", "Font        : {}:{}".format(self.prediction.predicted_fonts[i-2],self.prediction.fonts_confidence[i-2])))
-            self.label_4.setText(_translate("MainWindow", "Font Result : {}:{}".format(self.prediction.font_result,self.prediction.result_confidence)))
-        else:
-            self.label_2.setText(_translate("MainWindow", "Charactor   : -"))
-            self.label_3.setText(_translate("MainWindow", "Font        : -"))
-            self.label_4.setText(_translate("MainWindow", "Font Result : {}:{}".format(self.prediction.font_result,self.prediction.result_confidence)))
-        # self.label_2.setText(_translate("MainWindow", "Prediction : {}".format(self.prediction.font_result)))
-        # self.label_4.setText(_translate("MainWindow", "Confidence : {}".format(self.prediction.result_confidence)))
-
-    def reset_page(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.label_2.setText(_translate("MainWindow", "Charactor   : -"))
-        self.label_3.setText(_translate("MainWindow", "Font        : -"))
-        self.label_4.setText(_translate("MainWindow", "Font Result : -"))
-        self.index=0
+        # self.label_2.setText(_translate("MainWindow", "Prediction : {}:{}".format(chr(int(self.prediction.predicted_alphabets[0][3:],16)),self.prediction.font_result)))
+        # self.label_4.setText(_translate("MainWindow", "Confidence : {}:{}".format(self.prediction.alphabets_confidence[0],self.prediction.result_confidence)))
+        self.label_2.setText(_translate("MainWindow", "Prediction : {}".format(self.prediction.font_result)))
+        self.label_4.setText(_translate("MainWindow", "Confidence : {}".format(self.prediction.result_confidence)))
 
 
     def browseImg(self):
         filename = QFileDialog.getOpenFileName(self, 'Open File', '','All Files (*);;PNG Files (*.png);;Jpg Files (*.jpg)')
         if filename[0]:
-            self.reset_page()
+            self.index=0
             image = filename[0]
             img = cv2.imread(image)
             cropImg = self.getImgCorner(img)
@@ -152,7 +147,7 @@ class UI_MainWindow(QMainWindow):
             self.imgs = [cropImg]
             self.showImg(self.imgs[self.index])
             self.prediction.predict(cropImg)
-            self.update_text(self.index)
+            self.update_text()
             self.imgs.append(self.prediction.rois_img)
             for roi in self.prediction.rois:
                 self.imgs.append(roi)
@@ -163,9 +158,8 @@ class UI_MainWindow(QMainWindow):
 
     def showImg(self,img):
         def scale(w,h):
-            if w >= h:
+            if w > h:
                 return 470, int(h * (470/w))
-
             else:
                 return int(w * (280/h)), 280
         print(img.shape)
@@ -252,8 +246,11 @@ class UI_MainWindow(QMainWindow):
 
         rows = c_pos[3][0]-c_pos[0][0]
         cols = c_pos[3][1]-c_pos[0][1]
+
+        
         pts1 = np.float32(c_pos)
         pts2 = np.float32([[0,0],[rows,0],[0,cols],[rows,cols]])
+
         copium = cv2.getPerspectiveTransform(pts1,pts2)
         cropImage = cv2.warpPerspective(img, copium, (rows,cols), borderValue=(255,255,255))
         return cropImage
